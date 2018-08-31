@@ -10,7 +10,7 @@ namespace CameraScript
         public Transform target;//watchu lookin at?
         public bool hideCursor = true;//is the cursor hidden?
         [Header("Orbit")]
-        public Vector3 offset = new Vector3(0, 5, 0);//where is the camera in relation to the target?
+        public Vector3 offset = Vector3.zero;//where is the camera in relation to the target?
         public float
             xSpeed = 120,//how fast on the x?
             ySpeed = 120,//how fast on the y?
@@ -31,8 +31,8 @@ namespace CameraScript
         private float y = 0;//whats the y degrees rotation?
         #endregion
         #endregion
-        // Use this for initialization
-        void Start()
+        
+        void Start()// Use this for initialization
         {
 
             target = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();//Find player
@@ -49,9 +49,8 @@ namespace CameraScript
             x = angles.y;
             y = angles.x;
         }
-
-        // Update is called once per frame
-        void Update()
+        
+        void Update()// Update is called once per frame
         {
             if (target)
             {

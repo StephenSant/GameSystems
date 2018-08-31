@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     #region Variables
+    public Transform weapon;
+    public bool rotateToMainCamera = false;
     [Header("Movement")]
     public float moveSpeed = 5;
     public float jumpHeight = 5;
@@ -15,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Camera Variables")]
     public float sensitvity = 5;
     private GameObject myCamera;
+    
     #endregion
     #region Raycast
     // Implement this OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn
@@ -54,11 +57,22 @@ public class PlayerMovement : MonoBehaviour
         #region Forward, backward, left and right movement
         float inputH = Input.GetAxisRaw("Horizontal");
         float inputV = Input.GetAxisRaw("Vertical");
-        Vector3 moveDir = new Vector3(-inputV, 0, inputH);
+        Vector3 moveDir = new Vector3(inputH, 0, inputV);
         moveDir = moveDir * moveSpeed;
+        Vector3 camEuler = Camera.main.transform.eulerAngles;
+        // Is the controller rotating to camera?
+        if (rotateToMainCamera)
+        {
+            // Get the euler angles of Camera
+            
+            // Calculate the new move direction by only taking into account the Y Axis
+            moveDir = Quaternion.AngleAxis(camEuler.y, Vector3.up) * moveDir;
+        }
+
         Vector3 force = new Vector3(moveDir.x, rigidbody.velocity.y, moveDir.z);
 
         #endregion
+
         #region Jump
         //Check if space is pressed
         if (Input.GetButton("Jump")&& IsGrounded())
@@ -83,5 +97,10 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("DEAD");
         }
         #endregion
+
+        Quaternion playerRotation = Quaternion.AngleAxis(camEuler.y, Vector3.up);
+        //Quaternion weaponRotation = Quaternion.AngleAxis(camEuler.x, Vector3.right);
+        //weapon.localRotation = weaponRotation;
+        transform.rotation = playerRotation;
     }
 }

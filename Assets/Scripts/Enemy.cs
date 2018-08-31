@@ -26,6 +26,8 @@ public class Enemy : MonoBehaviour
     private Transform[] waypoints;
     private int currentindex = 1;
 
+    public int health = 10;
+
     void Patrol()
     {
         Transform point = waypoints[currentindex];
@@ -80,6 +82,14 @@ public class Enemy : MonoBehaviour
             default:Debug.Log("Something went wrong!");
                 break;
         }
+        if (health <= 0) 
+        {
+            Destroy(gameObject);
+        }
         
+    }
+    public void DealDamage(int damage)
+    {
+        health -= damage;
     }
 }
