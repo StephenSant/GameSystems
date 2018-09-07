@@ -17,7 +17,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("Camera Variables")]
     public float sensitvity = 5;
     private GameObject myCamera;
-    
+
+    public Weapon currentWeapon;
     #endregion
     #region Raycast
     // Implement this OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn
@@ -72,7 +73,11 @@ public class PlayerMovement : MonoBehaviour
         Vector3 force = new Vector3(moveDir.x, rigidbody.velocity.y, moveDir.z);
 
         #endregion
-
+        if (Input.GetButton("Fire1"))
+        {
+            // Fire the weapon
+            currentWeapon.Attack();
+        }
         #region Jump
         //Check if space is pressed
         if (Input.GetButton("Jump")&& IsGrounded())
