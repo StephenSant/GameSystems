@@ -1830,7 +1830,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1666361617
 Transform:
   m_ObjectHideFlags: 0
@@ -2303,13 +2303,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1894531302}
+  - component: {fileID: 1894531303}
   m_Layer: 9
   m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1894531302
 Transform:
   m_ObjectHideFlags: 0
@@ -2324,6 +2325,24 @@ Transform:
   m_Father: {fileID: 456215339}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1894531303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1894531301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7cc17e711eb4d4cbb2344b253e4b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+  ammo: 1
+  accuracy: 1
+  range: 1
+  rateOfFire: 1
+  projectile: {fileID: 1694125550308494, guid: 949cd95beb84705418989d6931a2d215, type: 2}
+  firepoint: {fileID: 1014081904}
 --- !u!1 &1905710690
 GameObject:
   m_ObjectHideFlags: 0

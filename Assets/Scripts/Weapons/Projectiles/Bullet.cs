@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class Bullet : Projectile
 {
-    public int damage = 5;
-    public float speed = 5f;
-    public Rigidbody rigid;
-    public float delay = 10;
+    public Vector3 bulletSize;
+    public Vector3 direction;
+
+    private void Start()
+    {
+        transform.localScale = bulletSize;
+    }
 
     private void Update()
     {
@@ -18,12 +21,6 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    // Method for 'Firing' the bulle
-    public void Fire(Vector3 direction)
-    {
-        rigid.AddForce(direction * speed, ForceMode.Impulse);
-    }
-
     void OnTriggerEnter(Collider other)
     {
         Enemy enemy = other.GetComponent<Enemy>();
@@ -32,5 +29,7 @@ public class Bullet : MonoBehaviour
             enemy.DealDamage(damage);
             Destroy(gameObject);
         }
+
+        Destroy(gameObject);
     }
 }

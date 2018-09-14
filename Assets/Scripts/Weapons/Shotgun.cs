@@ -19,6 +19,6 @@ public class Shotgun : Weapon
 
         GameObject clone = Instantiate(projectile, firepoint.position,firepoint.rotation);
         Bullet newBullet = clone.GetComponent<Bullet>();
-        newBullet.Fire(direction + spead);
+        newBullet.Direction();
     }
 }

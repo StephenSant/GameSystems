@@ -73,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 force = new Vector3(moveDir.x, rigidbody.velocity.y, moveDir.z);
 
         #endregion
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             // Fire the weapon
             currentWeapon.Attack();

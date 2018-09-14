@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour {
+public abstract class Projectile : MonoBehaviour
+{
+    public int damage;
+    public float delay;
+    public float speed;
+    public Rigidbody rigid;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void Start()
+    {
+        Direction();
+    }
+    public virtual void Direction()
+    {
+        rigid.AddForce(transform.forward * speed, ForceMode.Impulse);
+    }
 }
