@@ -2,26 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     #region Variables
-    public Transform weapon;
-    public bool rotateToMainCamera = false;
-    [Header("Movement")]
+    [Header("Movement Variables")]
     public float moveSpeed = 5;
     public float jumpHeight = 5;
+    private bool isJumping;
+    private Vector3 moveDir;
     private Rigidbody rigidbody;
     private Vector3 spawnPoint;
-    [Header("Physics")]
-    public float rayDistance = 1f;
     [Header("Camera Variables")]
+    public bool rotateToMainCamera = false;
     public float sensitvity = 5;
     private GameObject myCamera;
+    [Header("Weapon Variables")]
+    public Weapon[] weapons;
+    private Weapon currentWeapon;
 
-    public Weapon currentWeapon;
+    private Interactable interactObject;
     #endregion
     #region Raycast
-    // Implement this OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn
+    [Header("Physics")]
+    public float rayDistance = 1.1f;
     private void OnDrawGizmosSelected()
     {
         Ray groundRay = new Ray(transform.position, Vector3.down);
@@ -29,10 +32,18 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawLine(groundRay.origin, groundRay.origin + groundRay.direction * rayDistance);
     }
     #endregion
-    // Use this for initialization
+    #region TriggerEnter
+    private void OnTriggerEnter(Collider other)
+    {
+        interactObject = other.GetComponent<Interactable>();
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        interactObject = null;
+    }
+    #endregion
     void Start()
     {
-        //Set up Components
         rigidbody = this.GetComponent<Rigidbody>();
         myCamera = GameObject.Find("Main Camera");
         spawnPoint = this.transform.position;
@@ -40,52 +51,35 @@ public class PlayerMovement : MonoBehaviour
 
     bool IsGrounded()
     {
-        //Makes a ray
         Ray groundRay = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
         if (Physics.Raycast(groundRay, out hit, rayDistance))
         {
-            //Return true if is grounded
             return true;
         }
-        //Return true if is NOT grounded
         return false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        #region Forward, backward, left and right movement
-        float inputH = Input.GetAxisRaw("Horizontal");
-        float inputV = Input.GetAxisRaw("Vertical");
-        Vector3 moveDir = new Vector3(inputH, 0, inputV);
-        moveDir = moveDir * moveSpeed;
+        #region Camera Rotation
         Vector3 camEuler = Camera.main.transform.eulerAngles;
-        // Is the controller rotating to camera?
         if (rotateToMainCamera)
         {
-            // Get the euler angles of Camera
-            
-            // Calculate the new move direction by only taking into account the Y Axis
             moveDir = Quaternion.AngleAxis(camEuler.y, Vector3.up) * moveDir;
         }
-
-        Vector3 force = new Vector3(moveDir.x, rigidbody.velocity.y, moveDir.z);
-
         #endregion
-        if (Input.GetButtonDown("Fire1"))
-        {
-            // Fire the weapon
-            currentWeapon.Attack();
-        }
+        #region Forward, backward, left and right movement
+        Vector3 force = new Vector3(moveDir.x, rigidbody.velocity.y, moveDir.z);
+        #endregion
         #region Jump
         //Check if space is pressed
-        if (Input.GetButton("Jump")&& IsGrounded())
+        if (isJumping && IsGrounded())
         {
             //Jump!
             force.y = jumpHeight;
+            isJumping = false;
         }
-
         #endregion
         #region Direction moving
         rigidbody.velocity = force;
@@ -102,10 +96,47 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("DEAD");
         }
         #endregion
-
         Quaternion playerRotation = Quaternion.AngleAxis(camEuler.y, Vector3.up);
-        //Quaternion weaponRotation = Quaternion.AngleAxis(camEuler.x, Vector3.right);
-        //weapon.localRotation = weaponRotation;
         transform.rotation = playerRotation;
+    }
+    #region Weapon
+    private void DisableAllWeapons()
+    {
+        foreach (Weapon weapon in weapons)
+        {
+            weapon.gameObject.SetActive(false);
+        }
+    }
+
+    public void SelectWeapon(int index)
+    {
+        if (index < 0 || index >= weapons.Length) { return; }
+        DisableAllWeapons();
+        weapons[index].gameObject.SetActive(true);
+        currentWeapon = weapons[index];
+    }
+    #endregion
+
+    public void Move(float inputH, float inputV)
+    {
+        moveDir = new Vector3(inputH, 0, inputV);
+        moveDir *= moveSpeed;
+    }
+
+    public void Jump()
+    {
+        isJumping = true;
+    }
+
+    public void Attack()
+    {
+        currentWeapon.Attack();
+    }
+    public void Interact()
+    {
+        if (interactObject)
+        {
+            interactObject.Interact();
+        }
     }
 }
